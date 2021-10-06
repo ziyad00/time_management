@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
 import express from 'express';
 import morgan from 'morgan';
+import checkAuth from './middleware/check-auth.js'
 
 import userRoutes from './routes/user.js';
+import sessionRoutes from './routes/session.js';
 
 
 import models, { connectDb } from './models/index.js';
@@ -40,8 +42,10 @@ app.use((req, res, next) => {
 });
 
 app.use("/user", userRoutes);
+app.use("/session", sessionRoutes);
 
-app.get("/", (req, res, next)=>{
+app.get("/",checkAuth, (req, res, next)=>{
+  console.log(req.userData.userIs)
   return res.json({message : "hh"});
 
 });

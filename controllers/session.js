@@ -1,12 +1,13 @@
-const mongoose = require("mongoose");
-
-const User = require("../models/user");
-const Session = require("../models/session");
 
 
-exports.session_get_all = (req, res, next) => {
+import mongoose from 'mongoose';
+import User from '../models/user.js';
+import Session from '../models/session.js'
+
+const session_get_all = (req, res, next) => {
     Session.find()
-      .select("name price _id productImage")
+    .where('userID').equals('user')
+     // .select("name price _id productImage")
       .exec()
       .then(docs => {
         const response = {
@@ -14,9 +15,10 @@ exports.session_get_all = (req, res, next) => {
           products: docs.map(doc => {
             return {
               name: doc.name,
-              price: doc.price,
-              productImage: doc.productImage,
               _id: doc._id,
+              createdBy: doc.user,
+              createdAt: doc.createdAt,
+              updatedAt: doc.updatedAt,
               request: {
                 type: "GET",
                 url: "http://localhost:3000/products/" + doc._id
@@ -39,7 +41,7 @@ exports.session_get_all = (req, res, next) => {
         });
       });
   };
-  
+  /*
   exports.products_create_product = (req, res, next) => {
     const product = new Product({
       _id: new mongoose.Types.ObjectId(),
@@ -145,3 +147,5 @@ exports.session_get_all = (req, res, next) => {
         });
       });
   };
+*/
+  export default {session_get_all}
