@@ -12,13 +12,12 @@ const user_signup = (req, res, next) => {
   }else{
     credential = req.body.username;
   }
-  let x = User.findByLogin(credential);
-  console.log(x);
+  
   User.findByLogin(credential)
     .then(user => {
-      if (user.length >= 1) {
+      if (user) {
         return res.status(409).json({
-          message: "Mail exists"
+          message: "mail or username exists" // TODO: needs to be better error handling
         });
       } else {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -69,7 +68,7 @@ const user_login = (req, res, next) => {
   }
   User.findByLogin(credential)
     .then(user => {
-      if (user.length < 1) {
+      if (!user) {
         return res.status(401).json({
           message: "Auth failed"
         });
