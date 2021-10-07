@@ -41,24 +41,23 @@ const session_get_all = (req, res, next) => {
         });
       });
   };
-  /*
-  exports.products_create_product = (req, res, next) => {
-    const product = new Product({
-      _id: new mongoose.Types.ObjectId(),
+  
+const sessions_create_session = (req, res, next) => {
+    const session = new Session({
       name: req.body.name,
-      price: req.body.price,
-      productImage: req.file.path
+      user: req.userData.userId,
     });
-    product
+    session
       .save()
       .then(result => {
-        console.log(result);
         res.status(201).json({
           message: "Created product successfully",
-          createdProduct: {
+          createdSession: {
             name: result.name,
-            price: result.price,
+            createdBy: result.user,
             _id: result._id,
+            createdAt: result.createdAt,
+            updatedAt: result.updatedAt,
             request: {
               type: "GET",
               url: "http://localhost:3000/products/" + result._id
@@ -74,6 +73,7 @@ const session_get_all = (req, res, next) => {
       });
   };
   
+  /*
   exports.products_get_product = (req, res, next) => {
     const id = req.params.productId;
     Product.findById(id)
@@ -148,4 +148,4 @@ const session_get_all = (req, res, next) => {
       });
   };
 */
-  export default {session_get_all}
+  export default {session_get_all,sessions_create_session}
