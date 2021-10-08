@@ -2,10 +2,10 @@
 
 import mongoose from 'mongoose';
 import User from '../models/user.js';
-import Session from '../models/session.js'
+import Task from '../models/task.js'
 
-const session_get_all = (req, res, next) => {
-    Session.find()
+const task_get_all = (req, res, next) => {
+    Task.find()
     .where('userID').equals('user')
      // .select("name price _id productImage")
       .exec()
@@ -42,12 +42,12 @@ const session_get_all = (req, res, next) => {
       });
   };
   
-const sessions_create_session = (req, res, next) => {
-    const session = new Session({
+const tasks_create_task = (req, res, next) => {
+    const session = new Task({
       name: req.body.name,
       user: req.userData.userId,
     });
-    session
+    Task
       .save()
       .then(result => {
         res.status(201).json({
@@ -148,4 +148,4 @@ const sessions_create_session = (req, res, next) => {
       });
   };
 */
-  export default {session_get_all,sessions_create_session}
+  export default {task_get_all,tasks_create_task}
