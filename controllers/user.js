@@ -6,12 +6,8 @@ import User from '../models/user.js';
 
 
 const user_signup = (req, res, next) => {
-  let credential;
-  if(req.body.email){
-    credential = req.body.email;
-  }else{
-    credential = req.body.username;
-  }
+  let credential = req.body.email ?? req.body.username;
+
   
   User.findByLogin(credential)
     .then(user => {
@@ -60,12 +56,7 @@ const user_signup = (req, res, next) => {
 };
 
 const user_login = (req, res, next) => {
-  let credential;
-  if(req.body.email){
-    credential = req.body.email;
-  }else{
-    credential = req.body.username;
-  }
+  let credential = req.body.email ?? req.body.username;
   User.findByLogin(credential)
     .then(user => {
       if (!user) {

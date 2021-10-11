@@ -41,8 +41,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/user", userRoutes);
-app.use("/task", taskRoutes);
+app.use("/users", userRoutes);
+app.use("/tasks", taskRoutes);
 
 app.get("/",checkAuth, (req, res, next)=>{
   console.log(req.userData.userId)

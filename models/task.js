@@ -8,13 +8,21 @@ const taskSchema = mongoose.Schema({
       resumeTime:{type: Date, defaut: Date.now()},
       pauseTime:Date,
       countedTime:Number // minutes
-    }
+    },
+   
     
 }, {
     timestamps: true
   });
 
 
+  const childSchema = new mongoose.Schema({
+    name: String,
+    age: {
+      type: Number,
+      default: 0
+    }
+  });
 taskSchema.pre('updateOne', async function(next) {
   const docToUpdate = await this.model.findOne(this.getQuery());
 

@@ -43,11 +43,15 @@ const task_get_all = (req, res, next) => {
   };
   
 const tasks_create_task = (req, res, next) => {
-    const session = new Task({
-      name: req.body.name,
-      user: req.userData.userId,
-    });
-    Task
+  
+    //const task = new Task({
+      //name: req.body.name,
+      //user: req.userData.userId,
+    //});
+    const task = new Task(req.body);
+    task.user = req.userData.userId;
+    console.log(task)
+    task
       .save()
       .then(result => {
         res.status(201).json({
@@ -74,7 +78,7 @@ const tasks_create_task = (req, res, next) => {
   };
   
   
-  tasks_get_task = (req, res, next) => {
+const tasks_get_task = (req, res, next) => {
     const id = req.params.taskId;
     Task.findById(id)
    //   .select("name price _id productImage")
@@ -101,13 +105,14 @@ const tasks_create_task = (req, res, next) => {
       });
   };
   
-  tasks_update_task = (req, res, next) => {
+const tasks_update_task = (req, res, next) => {
     const id = req.params.taskId;
     const updateOps = {};
-    for (const ops of req.body) {
-      updateOps[ops.propName] = ops.value;
-    }
-    Task.updateOne({ _id: id }, { $set: updateOps })
+    //for (const ops of req.body) {
+      //updateOps[ops.propName] = ops.value;
+    //}
+    console.log(req.body)
+    Task.updateOne({ _id: id }, { $set: req.body })
       .exec()
       .then(result => {
         res.status(200).json({
@@ -126,7 +131,7 @@ const tasks_create_task = (req, res, next) => {
       });
   };
   
-  task_delete = (req, res, next) => {
+const task_delete = (req, res, next) => {
     const id = req.params.taskId;
     Task.deleteOne({ _id: id })
       .exec()
