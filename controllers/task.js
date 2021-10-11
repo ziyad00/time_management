@@ -73,17 +73,17 @@ const tasks_create_task = (req, res, next) => {
       });
   };
   
-  /*
-  exports.products_get_product = (req, res, next) => {
-    const id = req.params.productId;
-    Product.findById(id)
-      .select("name price _id productImage")
+  
+  tasks_get_task = (req, res, next) => {
+    const id = req.params.taskId;
+    Task.findById(id)
+   //   .select("name price _id productImage")
       .exec()
       .then(doc => {
         console.log("From database", doc);
         if (doc) {
           res.status(200).json({
-            product: doc,
+            task: doc,
             request: {
               type: "GET",
               url: "http://localhost:3000/products"
@@ -101,13 +101,13 @@ const tasks_create_task = (req, res, next) => {
       });
   };
   
-  exports.products_update_product = (req, res, next) => {
-    const id = req.params.productId;
+  tasks_update_task = (req, res, next) => {
+    const id = req.params.taskId;
     const updateOps = {};
     for (const ops of req.body) {
       updateOps[ops.propName] = ops.value;
     }
-    Product.update({ _id: id }, { $set: updateOps })
+    Task.updateOne({ _id: id }, { $set: updateOps })
       .exec()
       .then(result => {
         res.status(200).json({
@@ -126,9 +126,9 @@ const tasks_create_task = (req, res, next) => {
       });
   };
   
-  exports.products_delete = (req, res, next) => {
-    const id = req.params.productId;
-    Product.remove({ _id: id })
+  task_delete = (req, res, next) => {
+    const id = req.params.taskId;
+    Task.deleteOne({ _id: id })
       .exec()
       .then(result => {
         res.status(200).json({
@@ -147,5 +147,6 @@ const tasks_create_task = (req, res, next) => {
         });
       });
   };
-*/
-  export default {task_get_all,tasks_create_task}
+
+export default {task_get_all,tasks_create_task,
+  tasks_get_task,task_delete,tasks_update_task}
