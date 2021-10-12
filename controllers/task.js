@@ -12,7 +12,7 @@ const task_get_all = (req, res, next) => {
       .then(docs => {
         const response = {
           count: docs.length,
-          products: docs.map(doc => {
+          tasks: docs.map(doc => {
             return {
               name: doc.name,
               _id: doc._id,
@@ -21,7 +21,7 @@ const task_get_all = (req, res, next) => {
               updatedAt: doc.updatedAt,
               request: {
                 type: "GET",
-                url: "http://localhost:3000/products/" + doc._id
+                url: "http://localhost:3000/tasks/" + doc._id
               }
             };
           })
@@ -55,18 +55,18 @@ const tasks_create_task = (req, res, next) => {
       .save()
       .then(result => {
         res.status(201).json({
-          message: "Created product successfully",
-          createdSession: {
-            name: result.name,
-            createdBy: result.user,
-            _id: result._id,
-            createdAt: result.createdAt,
-            updatedAt: result.updatedAt,
+          message: "Created task successfully",
+          createdSession: result, //{
+       //     name: result.name,
+         //   createdBy: result.user,
+           // _id: result._id,
+        //    createdAt: result.createdAt,
+          //  updatedAt: result.updatedAt,
             request: {
               type: "GET",
-              url: "http://localhost:3000/products/" + result._id
+              url: "http://localhost:3000/tasks/" + result._id
             }
-          }
+          
         });
       })
       .catch(err => {
@@ -90,7 +90,7 @@ const tasks_get_task = (req, res, next) => {
             task: doc,
             request: {
               type: "GET",
-              url: "http://localhost:3000/products"
+              url: "http://localhost:3000/task"
             }
           });
         } else {
@@ -112,14 +112,15 @@ const tasks_update_task = (req, res, next) => {
       //updateOps[ops.propName] = ops.value;
     //}
     console.log(req.body)
+
     Task.updateOne({ _id: id }, { $set: req.body })
       .exec()
       .then(result => {
         res.status(200).json({
-          message: "Product updated",
+          message: "task updated",
           request: {
             type: "GET",
-            url: "http://localhost:3000/products/" + id
+            url: "http://localhost:3000/tasks/" + id
           }
         });
       })
@@ -137,10 +138,10 @@ const task_delete = (req, res, next) => {
       .exec()
       .then(result => {
         res.status(200).json({
-          message: "Product deleted",
+          message: "task deleted",
           request: {
             type: "POST",
-            url: "http://localhost:3000/products",
+            url: "http://localhost:3000/tasks",
             body: { name: "String", price: "Number" }
           }
         });
