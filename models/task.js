@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 
 const countSchema = new mongoose.Schema({
-
   resumeTime: {
     type: Date,
     default: Date.now()
+
     },
   pauseTime:{
+  
     type: Date, 
     default:Date.now()
   },
@@ -31,31 +32,36 @@ const taskSchema = mongoose.Schema({
 
 
 
-taskSchema.post('updateOne', async function(result) {
+taskSchema.pre('updateOne', async function(next) {
   const docToUpdate = await this.model.findOne(this.getQuery());
-  //console.log(docToUpdate.status);
-  //console.log(this);
-  const doc = this._update.$set;
+  
+  
+  if(docToUpdate.status != this._update.$set.status){
 
-  if(docToUpdate.status != doc.status){
+  if(this._update.$set.status ==false){
+    
+    docToUpdate.count.pauseTime = Date.now();
+    docToUpdate.count.countedTime += (docToUpdate.count.pauseTime - docToUpdate.count.resumeTime);
+    docToUpdate.count.pauseTime = null;
+    docToUpdate.count.resumeTime = null;
+    docToUpdate.save();
 
-  if(doc.status ==false){
-
-    doc.pauseTime = Date.now();
-    doc.count.countedTime += doc.count.pauseTime - doc.count.resumeTime;
-    doc.pauseTime = 0;
-    doc.resumeTime = 0;
   }else {
-    doc.resumeTime = Date.now();
+    docToUpdate.count.resumeTime = Date.now();
+    docToUpdate.save();
+   
 
 
-  }}
-  this._update.$set = doc;
+
+
+  }
+}
+  next();
 });
    
-taskSchema.post('save', function() {
-    this.count.resumeTime = this.startedAt;
-});
+//taskSchema.post('save', function() {
+  //  this.count.resumeTime = this.startedAt;
+//});
 const Task= mongoose.model('Task', taskSchema);
 //const doc = new Task();
 //console.log(doc.count); 

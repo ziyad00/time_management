@@ -50,7 +50,6 @@ const tasks_create_task = (req, res, next) => {
     //});
     const task = new Task(req.body);
     task.user = req.userData.userId;
-    console.log(task)
     task
       .save()
       .then(result => {
@@ -111,13 +110,14 @@ const tasks_update_task = (req, res, next) => {
     //for (const ops of req.body) {
       //updateOps[ops.propName] = ops.value;
     //}
-    console.log(req.body)
-
+    //const docToUpdate = Task.findOne({ _id: id});
+   // console.log(docToUpdate)
     Task.updateOne({ _id: id }, { $set: req.body })
       .exec()
       .then(result => {
         res.status(200).json({
           message: "task updated",
+//          updated: result,
           request: {
             type: "GET",
             url: "http://localhost:3000/tasks/" + id
