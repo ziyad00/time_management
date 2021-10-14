@@ -7,8 +7,6 @@ import User from '../models/user.js';
 
 const user_signup = (req, res, next) => {
   let credential = req.body.email ?? req.body.username;
-
-  
   User.findByLogin(credential)
     .then(user => {
       if (user) {

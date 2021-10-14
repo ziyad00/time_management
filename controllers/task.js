@@ -5,8 +5,10 @@ import User from '../models/user.js';
 import Task from '../models/task.js'
 
 const task_get_all = (req, res, next) => {
+  const user = User.findById(req.userData.userId);
+  console.log(req.userData)
     Task.find()
-    .where('userID').equals('user')
+    .where('user').equals(req.userData.userId)
      // .select("name price _id productImage")
       .exec()
       .then(docs => {
@@ -14,11 +16,7 @@ const task_get_all = (req, res, next) => {
           count: docs.length,
           tasks: docs.map(doc => {
             return {
-              name: doc.name,
-              _id: doc._id,
-              createdBy: doc.user,
-              createdAt: doc.createdAt,
-              updatedAt: doc.updatedAt,
+              task: doc,
               request: {
                 type: "GET",
                 url: "http://localhost:3000/tasks/" + doc._id
@@ -26,13 +24,8 @@ const task_get_all = (req, res, next) => {
             };
           })
         };
-        //   if (docs.length >= 0) {
         res.status(200).json(response);
-        //   } else {
-        //       res.status(404).json({
-        //           message: 'No entries found'
-        //       });
-        //   }
+    
       })
       .catch(err => {
         console.log(err);

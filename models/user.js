@@ -28,6 +28,8 @@ userSchema.statics.findByLogin = async function (login) {
     return user;
   };
 
+
+
 userSchema.pre('remove', function(next) {
     this.model('Session').deleteMany({ user: this._id }, next);
 });

@@ -40,8 +40,8 @@ taskSchema.pre('updateOne', async function(next) {
 
   if(this._update.$set.status ==false){
     
-    docToUpdate.count.pauseTime = Date.now();
-    docToUpdate.count.countedTime += (docToUpdate.count.pauseTime - docToUpdate.count.resumeTime);
+    docToUpdate.count.pauseTime = Date.now(); 
+    docToUpdate.count.countedTime += (docToUpdate.count.pauseTime - docToUpdate.count.resumeTime)/1000;
     docToUpdate.count.pauseTime = null;
     docToUpdate.count.resumeTime = null;
     docToUpdate.save();
@@ -59,9 +59,10 @@ taskSchema.pre('updateOne', async function(next) {
   next();
 });
    
-//taskSchema.post('save', function() {
-  //  this.count.resumeTime = this.startedAt;
-//});
+taskSchema.post('save', function(next) {
+  //  this.count.resumeTime = this.startedAt; there is no this
+  //  next();
+});
 const Task= mongoose.model('Task', taskSchema);
 //const doc = new Task();
 //console.log(doc.count); 
