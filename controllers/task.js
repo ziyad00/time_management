@@ -97,37 +97,31 @@ const tasks_get_task = (req, res, next) => {
       });
   };
   
-const tasks_update_task = (req, res, next) => {
+const tasks_update_task = async (req, res, next) => {
     const id = req.params.taskId;
-    const updateOps = {};
-    //for (const ops of req.body) {
-      //updateOps[ops.propName] = ops.value;
-    //}
-    //const docToUpdate = Task.findOne({ _id: id});
-   // console.log(docToUpdate)
-    Task.updateOne({ _id: id }, { $set: req.body })
-      .exec()
-      .then(result => {
-        res.status(200).json({
+    try {
+    const result = await Task.updateOne({ _id: id }, { $set: req.body }).where('user').equals(req.userData.userId);
+    const task = await Task.findById(id);
+    res.status(200).json({
           message: "task updated",
-//          updated: result,
+          updated: task,
           request: {
             type: "GET",
             url: "http://localhost:3000/tasks/" + id
           }
         });
-      })
-      .catch(err => {
+      }
+      catch(err)  {
         console.log(err);
         res.status(500).json({
           error: err
         });
-      });
+      }; 
   };
   
 const task_delete = (req, res, next) => {
     const id = req.params.taskId;
-    Task.deleteOne({ _id: id })
+    Task.deleteOne({ _id: id }).where('user').equals(req.userData.userId)
       .exec()
       .then(result => {
         res.status(200).json({
@@ -135,7 +129,7 @@ const task_delete = (req, res, next) => {
           request: {
             type: "POST",
             url: "http://localhost:3000/tasks",
-            body: { name: "String", price: "Number" }
+            //body: { name: "String", price: "Number" }
           }
         });
       })

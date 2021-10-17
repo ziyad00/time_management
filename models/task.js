@@ -20,6 +20,7 @@ const taskSchema = mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     name: {type: String},
     status: {type: Boolean, default: true},
+    tags: [String],
     count: {
         type:countSchema,
         default: () => ({})
@@ -32,37 +33,25 @@ const taskSchema = mongoose.Schema({
 
 
 
-taskSchema.pre('updateOne', async function(next) {
+taskSchema.pre('updateOne', async function() {
   const docToUpdate = await this.model.findOne(this.getQuery());
-  
-  
   if(docToUpdate.status != this._update.$set.status){
-
   if(this._update.$set.status ==false){
-    
     docToUpdate.count.pauseTime = Date.now(); 
+    console.log("resume " + docToUpdate.count.resumeTime + "pause " + docToUpdate.count.pauseTime);
     docToUpdate.count.countedTime += (docToUpdate.count.pauseTime - docToUpdate.count.resumeTime)/1000;
     docToUpdate.count.pauseTime = null;
     docToUpdate.count.resumeTime = null;
     docToUpdate.save();
-
   }else {
     docToUpdate.count.resumeTime = Date.now();
     docToUpdate.save();
-   
-
-
-
-
   }
 }
-  next();
+  
 });
    
-taskSchema.post('save', function(next) {
-  //  this.count.resumeTime = this.startedAt; there is no this
-  //  next();
-});
+
 const Task= mongoose.model('Task', taskSchema);
 //const doc = new Task();
 //console.log(doc.count); 
